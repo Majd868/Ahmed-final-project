@@ -236,6 +236,11 @@ string error_fill_all_fields
 string error_invalid_date
 string error_password_too_short
 string error_passwords_no_match
+string gcm_defaultSenderId
+string google_api_key
+string google_app_id
+string google_crash_reporting_api_key
+string google_storage_bucket
 string likes
 string login
 string logout
@@ -254,6 +259,7 @@ string price
 string private_tasks
 string product_id
 string product_name
+string project_id
 string quantity
 string reports
 string sales_total

@@ -2,13 +2,16 @@ package com.storepilot.db.entities;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "tasks",
         foreignKeys = {
             @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "assignedTo", onDelete = ForeignKey.SET_NULL),
             @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "createdBy", onDelete = ForeignKey.SET_NULL)
-        })
+        },
+        indices = {@Index("assignedTo"), @Index("createdBy")})
 public class Task {
 
     @PrimaryKey(autoGenerate = true)
@@ -26,6 +29,7 @@ public class Task {
 
     public Task() {}
 
+    @Ignore
     public Task(String title, String description, Integer assignedTo, Integer createdBy,
                 String status, String priority, boolean isPrivate, long dueDate, long createdAt) {
         this.title = title;

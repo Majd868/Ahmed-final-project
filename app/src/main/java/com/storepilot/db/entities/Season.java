@@ -1,6 +1,7 @@
 package com.storepilot.db.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "seasons")
@@ -18,6 +19,7 @@ public class Season {
 
     public Season() {}
 
+    @Ignore
     public Season(String name, long startDate, long endDate, int alertDaysBeforeEnd,
                   boolean isActive, String notes) {
         this.name = name;

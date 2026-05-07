@@ -2,12 +2,15 @@ package com.storepilot.db.entities;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "video_metrics",
         foreignKeys = {
             @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "recordedBy", onDelete = ForeignKey.SET_NULL)
-        })
+        },
+        indices = {@Index("recordedBy")})
 public class VideoMetric {
 
     @PrimaryKey(autoGenerate = true)
@@ -24,6 +27,7 @@ public class VideoMetric {
 
     public VideoMetric() {}
 
+    @Ignore
     public VideoMetric(String title, String platform, long views, long likes, long shares,
                        long comments, long videoDate, Integer recordedBy) {
         this.title = title;

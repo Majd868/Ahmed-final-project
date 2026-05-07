@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 @Database(
     entities = {User.class, Product.class, Sale.class, Purchase.class,
                 VideoMetric.class, Season.class, Task.class},
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

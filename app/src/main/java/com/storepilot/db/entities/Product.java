@@ -1,6 +1,7 @@
 package com.storepilot.db.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "products")
@@ -21,6 +22,7 @@ public class Product {
 
     public Product() {}
 
+    @Ignore
     public Product(String name, String category, String size, String color,
                    int quantity, double price, double costPrice, String imageUrl, long createdAt) {
         this.name = name;

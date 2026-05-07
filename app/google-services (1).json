@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "513506445097",
+    "project_id": "storepiloy",
+    "storage_bucket": "storepiloy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513506445097:android:2bb376439dfe9ce9835938",
+        "android_client_info": {
+          "package_name": "com.storepilot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcHUe2YVTqs1-ubamflNang42hp-qIcOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

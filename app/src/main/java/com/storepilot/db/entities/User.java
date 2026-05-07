@@ -1,6 +1,7 @@
 package com.storepilot.db.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -18,6 +19,7 @@ public class User {
 
     public User() {}
 
+    @Ignore
     public User(String username, String passwordHash, String salt, String role, long createdAt) {
         this.username = username;
         this.passwordHash = passwordHash;

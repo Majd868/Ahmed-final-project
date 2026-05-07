@@ -58,19 +58,26 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `passwordHash` TEXT, `salt` TEXT, `role` TEXT, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_users_username` ON `users` (`username`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `products` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `category` TEXT, `size` TEXT, `color` TEXT, `quantity` INTEGER NOT NULL, `price` REAL NOT NULL, `costPrice` REAL NOT NULL, `imageUrl` TEXT, `createdAt` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `sales` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER, `quantity` INTEGER NOT NULL, `totalPrice` REAL NOT NULL, `saleDate` INTEGER NOT NULL, `soldBy` INTEGER, `notes` TEXT, FOREIGN KEY(`productId`) REFERENCES `products`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`soldBy`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_sales_productId` ON `sales` (`productId`)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_sales_soldBy` ON `sales` (`soldBy`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `purchases` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER, `quantity` INTEGER NOT NULL, `totalCost` REAL NOT NULL, `purchaseDate` INTEGER NOT NULL, `purchasedBy` INTEGER, `supplier` TEXT, `notes` TEXT, FOREIGN KEY(`productId`) REFERENCES `products`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`purchasedBy`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_purchases_productId` ON `purchases` (`productId`)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_purchases_purchasedBy` ON `purchases` (`purchasedBy`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `video_metrics` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `platform` TEXT, `views` INTEGER NOT NULL, `likes` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `comments` INTEGER NOT NULL, `videoDate` INTEGER NOT NULL, `recordedBy` INTEGER, FOREIGN KEY(`recordedBy`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_video_metrics_recordedBy` ON `video_metrics` (`recordedBy`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `seasons` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `startDate` INTEGER NOT NULL, `endDate` INTEGER NOT NULL, `alertDaysBeforeEnd` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `notes` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `tasks` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `description` TEXT, `assignedTo` INTEGER, `createdBy` INTEGER, `status` TEXT, `priority` TEXT, `isPrivate` INTEGER NOT NULL, `dueDate` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`assignedTo`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`createdBy`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_tasks_assignedTo` ON `tasks` (`assignedTo`)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_tasks_createdBy` ON `tasks` (`createdBy`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a66d6be0e5cef45711255e7354f10b8')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd2170c143ae3f13bc42c5f470bb32f4d')");
       }
 
       @Override
@@ -174,7 +181,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         final HashSet<TableInfo.ForeignKey> _foreignKeysSales = new HashSet<TableInfo.ForeignKey>(2);
         _foreignKeysSales.add(new TableInfo.ForeignKey("products", "SET NULL", "NO ACTION", Arrays.asList("productId"), Arrays.asList("id")));
         _foreignKeysSales.add(new TableInfo.ForeignKey("users", "SET NULL", "NO ACTION", Arrays.asList("soldBy"), Arrays.asList("id")));
-        final HashSet<TableInfo.Index> _indicesSales = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesSales = new HashSet<TableInfo.Index>(2);
+        _indicesSales.add(new TableInfo.Index("index_sales_productId", false, Arrays.asList("productId"), Arrays.asList("ASC")));
+        _indicesSales.add(new TableInfo.Index("index_sales_soldBy", false, Arrays.asList("soldBy"), Arrays.asList("ASC")));
         final TableInfo _infoSales = new TableInfo("sales", _columnsSales, _foreignKeysSales, _indicesSales);
         final TableInfo _existingSales = TableInfo.read(db, "sales");
         if (!_infoSales.equals(_existingSales)) {
@@ -194,7 +203,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         final HashSet<TableInfo.ForeignKey> _foreignKeysPurchases = new HashSet<TableInfo.ForeignKey>(2);
         _foreignKeysPurchases.add(new TableInfo.ForeignKey("products", "SET NULL", "NO ACTION", Arrays.asList("productId"), Arrays.asList("id")));
         _foreignKeysPurchases.add(new TableInfo.ForeignKey("users", "SET NULL", "NO ACTION", Arrays.asList("purchasedBy"), Arrays.asList("id")));
-        final HashSet<TableInfo.Index> _indicesPurchases = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesPurchases = new HashSet<TableInfo.Index>(2);
+        _indicesPurchases.add(new TableInfo.Index("index_purchases_productId", false, Arrays.asList("productId"), Arrays.asList("ASC")));
+        _indicesPurchases.add(new TableInfo.Index("index_purchases_purchasedBy", false, Arrays.asList("purchasedBy"), Arrays.asList("ASC")));
         final TableInfo _infoPurchases = new TableInfo("purchases", _columnsPurchases, _foreignKeysPurchases, _indicesPurchases);
         final TableInfo _existingPurchases = TableInfo.read(db, "purchases");
         if (!_infoPurchases.equals(_existingPurchases)) {
@@ -214,7 +225,8 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsVideoMetrics.put("recordedBy", new TableInfo.Column("recordedBy", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysVideoMetrics = new HashSet<TableInfo.ForeignKey>(1);
         _foreignKeysVideoMetrics.add(new TableInfo.ForeignKey("users", "SET NULL", "NO ACTION", Arrays.asList("recordedBy"), Arrays.asList("id")));
-        final HashSet<TableInfo.Index> _indicesVideoMetrics = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesVideoMetrics = new HashSet<TableInfo.Index>(1);
+        _indicesVideoMetrics.add(new TableInfo.Index("index_video_metrics_recordedBy", false, Arrays.asList("recordedBy"), Arrays.asList("ASC")));
         final TableInfo _infoVideoMetrics = new TableInfo("video_metrics", _columnsVideoMetrics, _foreignKeysVideoMetrics, _indicesVideoMetrics);
         final TableInfo _existingVideoMetrics = TableInfo.read(db, "video_metrics");
         if (!_infoVideoMetrics.equals(_existingVideoMetrics)) {
@@ -253,7 +265,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         final HashSet<TableInfo.ForeignKey> _foreignKeysTasks = new HashSet<TableInfo.ForeignKey>(2);
         _foreignKeysTasks.add(new TableInfo.ForeignKey("users", "SET NULL", "NO ACTION", Arrays.asList("assignedTo"), Arrays.asList("id")));
         _foreignKeysTasks.add(new TableInfo.ForeignKey("users", "SET NULL", "NO ACTION", Arrays.asList("createdBy"), Arrays.asList("id")));
-        final HashSet<TableInfo.Index> _indicesTasks = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesTasks = new HashSet<TableInfo.Index>(2);
+        _indicesTasks.add(new TableInfo.Index("index_tasks_assignedTo", false, Arrays.asList("assignedTo"), Arrays.asList("ASC")));
+        _indicesTasks.add(new TableInfo.Index("index_tasks_createdBy", false, Arrays.asList("createdBy"), Arrays.asList("ASC")));
         final TableInfo _infoTasks = new TableInfo("tasks", _columnsTasks, _foreignKeysTasks, _indicesTasks);
         final TableInfo _existingTasks = TableInfo.read(db, "tasks");
         if (!_infoTasks.equals(_existingTasks)) {
@@ -263,7 +277,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "7a66d6be0e5cef45711255e7354f10b8", "0e65ca5a1bc000b987951bd3b114baee");
+    }, "d2170c143ae3f13bc42c5f470bb32f4d", "779f19b4d927943279e6c5510d115ce4");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

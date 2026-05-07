@@ -2,13 +2,16 @@ package com.storepilot.db.entities;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "purchases",
         foreignKeys = {
             @ForeignKey(entity = Product.class, parentColumns = "id", childColumns = "productId", onDelete = ForeignKey.SET_NULL),
             @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "purchasedBy", onDelete = ForeignKey.SET_NULL)
-        })
+        },
+        indices = {@Index("productId"), @Index("purchasedBy")})
 public class Purchase {
 
     @PrimaryKey(autoGenerate = true)
@@ -24,6 +27,7 @@ public class Purchase {
 
     public Purchase() {}
 
+    @Ignore
     public Purchase(Integer productId, int quantity, double totalCost, long purchaseDate,
                     Integer purchasedBy, String supplier, String notes) {
         this.productId = productId;
