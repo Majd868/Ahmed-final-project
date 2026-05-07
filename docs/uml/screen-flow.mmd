@@ -1,0 +1,37 @@
+flowchart TD
+    A[App Launch] --> B{Owner exists?}
+    B -- No --> C[SetupActivity]
+    C --> D[Create Owner Account]
+    D --> E[LoginActivity]
+    B -- Yes --> E[LoginActivity]
+    E --> F{Credentials valid?}
+    F -- No --> E
+    F -- Yes --> G[MainActivity]
+
+    G --> H[DashboardFragment]
+    G --> I[ProductListFragment]
+    G --> J[SalesHistoryFragment]
+    G --> K[TaskListFragment]
+    G --> L[More Menu]
+
+    L --> M[PurchaseHistoryFragment]
+    L --> N[VideoMetricsFragment]
+    L --> O[ReportsFragment]
+    L --> P[SeasonListFragment]
+    L --> Q[UserManagementFragment]
+
+    I --> R[ProductDetailsFragment]
+    I --> S[AddEditProductActivity]
+
+    J --> T[AddSaleActivity]
+    M --> U[AddPurchaseActivity]
+    N --> V[AddMetricActivity]
+    P --> W[AddEditSeasonActivity]
+    K --> X[AddEditTaskActivity]
+
+    S --> I
+    T --> J
+    U --> M
+    V --> N
+    W --> P
+    X --> K

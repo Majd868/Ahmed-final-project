@@ -1,0 +1,188 @@
+classDiagram
+    direction TB
+
+    class BaseActivity
+    class MainActivity
+    class LoginActivity
+    class SetupActivity
+    class AddEditProductActivity
+    class AddSaleActivity
+    class AddPurchaseActivity
+    class AddMetricActivity
+    class AddEditSeasonActivity
+    class AddEditTaskActivity
+
+    class DashboardFragment
+    class ProductListFragment
+    class ProductDetailsFragment
+    class SalesHistoryFragment
+    class PurchaseHistoryFragment
+    class TaskListFragment
+    class VideoMetricsFragment
+    class ReportsFragment
+    class SeasonListFragment
+    class UserManagementFragment
+
+    class AuthViewModel
+    class ProductViewModel
+    class SaleViewModel
+    class PurchaseViewModel
+    class TaskViewModel
+    class SeasonViewModel
+    class VideoMetricViewModel
+    class ReportsViewModel
+
+    class UserRepository
+    class ProductRepository
+    class SaleRepository
+    class PurchaseRepository
+    class TaskRepository
+    class SeasonRepository
+    class VideoMetricRepository
+
+    class AppDatabase
+    class SessionManager
+    class PermissionManager
+    class CryptoUtil
+
+    class User {
+      +int id
+      +String username
+      +String passwordHash
+      +String salt
+      +String role
+      +long createdAt
+    }
+
+    class Product {
+      +int id
+      +String name
+      +String category
+      +String size
+      +String color
+      +int quantity
+      +double price
+      +double costPrice
+      +String imageUrl
+      +long createdAt
+    }
+
+    class Sale {
+      +int id
+      +Integer productId
+      +int quantity
+      +double totalPrice
+      +long saleDate
+      +Integer soldBy
+      +String notes
+    }
+
+    class Purchase {
+      +int id
+      +Integer productId
+      +int quantity
+      +double totalCost
+      +long purchaseDate
+      +Integer purchasedBy
+      +String supplier
+      +String notes
+    }
+
+    class VideoMetric {
+      +int id
+      +String title
+      +String platform
+      +long views
+      +long likes
+      +long shares
+      +long comments
+      +long videoDate
+      +Integer recordedBy
+    }
+
+    class Season {
+      +int id
+      +String name
+      +long startDate
+      +long endDate
+      +int alertDaysBeforeEnd
+      +boolean isActive
+      +String notes
+    }
+
+    class Task {
+      +int id
+      +String title
+      +String description
+      +Integer assignedTo
+      +Integer createdBy
+      +String status
+      +String priority
+      +boolean isPrivate
+      +long dueDate
+      +long createdAt
+    }
+
+    BaseActivity <|-- MainActivity
+    BaseActivity <|-- LoginActivity
+    BaseActivity <|-- SetupActivity
+    BaseActivity <|-- AddEditProductActivity
+    BaseActivity <|-- AddSaleActivity
+    BaseActivity <|-- AddPurchaseActivity
+    BaseActivity <|-- AddMetricActivity
+    BaseActivity <|-- AddEditSeasonActivity
+    BaseActivity <|-- AddEditTaskActivity
+
+    LoginActivity --> AuthViewModel
+    SetupActivity --> AuthViewModel
+    ProductListFragment --> ProductViewModel
+    ProductDetailsFragment --> ProductViewModel
+    DashboardFragment --> ProductViewModel
+    DashboardFragment --> SaleViewModel
+    DashboardFragment --> SeasonViewModel
+    DashboardFragment --> TaskViewModel
+    SalesHistoryFragment --> SaleViewModel
+    PurchaseHistoryFragment --> PurchaseViewModel
+    TaskListFragment --> TaskViewModel
+    VideoMetricsFragment --> VideoMetricViewModel
+    ReportsFragment --> ReportsViewModel
+    SeasonListFragment --> SeasonViewModel
+    UserManagementFragment --> UserRepository
+
+    AuthViewModel --> UserRepository
+    AuthViewModel --> SessionManager
+    AuthViewModel --> CryptoUtil
+    AuthViewModel --> AppDatabase
+
+    ProductViewModel --> ProductRepository
+    SaleViewModel --> SaleRepository
+    PurchaseViewModel --> PurchaseRepository
+    TaskViewModel --> TaskRepository
+    SeasonViewModel --> SeasonRepository
+    VideoMetricViewModel --> VideoMetricRepository
+    ReportsViewModel --> SaleRepository
+    ReportsViewModel --> ProductRepository
+
+    UserRepository --> AppDatabase
+    ProductRepository --> AppDatabase
+    SaleRepository --> AppDatabase
+    PurchaseRepository --> AppDatabase
+    TaskRepository --> AppDatabase
+    SeasonRepository --> AppDatabase
+    VideoMetricRepository --> AppDatabase
+
+    AppDatabase --> User
+    AppDatabase --> Product
+    AppDatabase --> Sale
+    AppDatabase --> Purchase
+    AppDatabase --> VideoMetric
+    AppDatabase --> Season
+    AppDatabase --> Task
+
+    Sale --> Product : productId
+    Sale --> User : soldBy
+    Purchase --> Product : productId
+    Purchase --> User : purchasedBy
+    VideoMetric --> User : recordedBy
+    Task --> User : assignedTo
+    Task --> User : createdBy
