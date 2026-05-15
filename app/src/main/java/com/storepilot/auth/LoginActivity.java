@@ -2,7 +2,6 @@ package com.storepilot.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +17,7 @@ import com.storepilot.viewmodels.AuthViewModel;
 public class LoginActivity extends BaseActivity {
 
     private EditText etUsername, etPassword;
-    private Button btnLogin;
+    private Button btnLogin, btnSignUp;
     private TextView tvDemoHint;
     private AuthViewModel authViewModel;
 
@@ -30,16 +29,10 @@ public class LoginActivity extends BaseActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignUp = findViewById(R.id.btnSignUp);
         tvDemoHint = findViewById(R.id.tvDemoHint);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
-        authViewModel.needsSetup.observe(this, needsSetup -> {
-            if (Boolean.TRUE.equals(needsSetup)) {
-                startActivity(new Intent(this, SetupActivity.class));
-                finish();
-            }
-        });
 
         authViewModel.loginSuccess.observe(this, success -> {
             if (Boolean.TRUE.equals(success)) {
@@ -64,6 +57,8 @@ public class LoginActivity extends BaseActivity {
             authViewModel.login(username, password);
         });
 
-        authViewModel.checkNeedsSetup();
+        btnSignUp.setOnClickListener(v -> {
+            startActivity(new Intent(this, SetupActivity.class));
+        });
     }
 }
