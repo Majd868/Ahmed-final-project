@@ -17,8 +17,8 @@ import com.storepilot.viewmodels.AuthViewModel;
 public class LoginActivity extends BaseActivity {
 
     private EditText etUsername, etPassword;
-    private Button btnLogin, btnSignUp;
-    private TextView tvDemoHint;
+    private Button btnLogin;
+    private TextView tvCreateOwnerAccount, tvDemoHint;
     private AuthViewModel authViewModel;
 
     @Override
@@ -29,7 +29,7 @@ public class LoginActivity extends BaseActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnSignUp = findViewById(R.id.btnSignUp);
+        tvCreateOwnerAccount = findViewById(R.id.tvCreateOwnerAccount);
         tvDemoHint = findViewById(R.id.tvDemoHint);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity {
             authViewModel.login(username, password);
         });
 
-        btnSignUp.setOnClickListener(v -> {
+        tvCreateOwnerAccount.setOnClickListener(v -> {
             startActivity(new Intent(this, SetupActivity.class));
         });
     }
