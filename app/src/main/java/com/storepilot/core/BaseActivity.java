@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity {
 
     protected void hideViewIfUnauthorized(View view, String permission) {
-        if (!PermissionManager.currentUserHasPermission(permission)) {
+        if  (!PermissionManager.currentUserHasPermission(permission)) {
             view.setVisibility(View.GONE);
         } else {
             view.setVisibility(View.VISIBLE);
